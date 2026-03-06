@@ -21,7 +21,7 @@ workflows:
     publishing:
       email:
         recipients:
-          - your@email.com  # TODO: replace with your email
+          - yanivpb@gmail.com
         notify:
           success: true
           failure: true
