@@ -37,14 +37,32 @@ class SpeechService {
     await _stt.stop();
   }
 
-  /// Returns true if the spoken text matches the expected Italian line.
-  /// Strips punctuation and is case-insensitive.
+  /// Returns true if the spoken text is a close enough match to the expected line.
+  /// Uses word-overlap scoring: passes if 70%+ of expected words are heard.
+  /// This is forgiving of minor mispronunciations and dropped words.
   bool isMatch(String spoken, String expected) {
-    String normalize(String s) => s
+    final spokenWords = _words(spoken);
+    final expectedWords = _words(expected);
+
+    if (spokenWords.isEmpty) return false;
+
+    // Count how many expected words appear in the spoken text
+    int matches = 0;
+    for (final word in expectedWords) {
+      if (spokenWords.contains(word)) matches++;
+    }
+
+    final score = matches / expectedWords.length;
+    debugPrint('SpeechService match: $score ($matches/${expectedWords.length}) spoken="$spoken"');
+    return score >= 0.70; // 70% threshold — forgiving but not too easy
+  }
+
+  List<String> _words(String s) {
+    return s
         .toLowerCase()
         .replaceAll(RegExp(r"[^\w\s]", unicode: true), '')
-        .replaceAll(RegExp(r'\s+'), ' ')
-        .trim();
-    return normalize(spoken) == normalize(expected);
+        .split(RegExp(r'\s+'))
+        .where((w) => w.isNotEmpty)
+        .toList();
   }
 }
