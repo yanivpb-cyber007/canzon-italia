@@ -1,0 +1,12 @@
+<!--
+  Add these two entries inside the <dict> block in:
+  ios/Runner/Info.plist
+
+  (This file is generated when you run `flutter create .`)
+-->
+
+<key>NSMicrophoneUsageDescription</key>
+<string>CanzonItalia needs the microphone so you can practice singing each line.</string>
+
+<key>NSSpeechRecognitionUsageDescription</key>
+<string>CanzonItalia uses speech recognition to check your Italian pronunciation.</string>
